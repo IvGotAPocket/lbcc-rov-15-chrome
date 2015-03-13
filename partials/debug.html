@@ -1,0 +1,30 @@
+<div class="well" ng-controller="ControllerInfo">
+	<canvas class="stick" leftstick></canvas>
+	<canvas class="stick" rightstick></canvas>
+	<canvas class="stick" rearleftstick></canvas>
+	<canvas class="stick" rearrightstick></canvas>
+	<img class="xbtn" ng-if="gamepad().buttons[0].pressed" src="img/Xbox 360/360_A.png">
+	<img class="xbtn" ng-if="gamepad().buttons[1].pressed" src="img/Xbox 360/360_B.png">
+	<img class="xbtn" ng-if="gamepad().buttons[2].pressed" src="img/Xbox 360/360_X.png">
+	<img class="xbtn" ng-if="gamepad().buttons[3].pressed" src="img/Xbox 360/360_Y.png">
+	<img class="xbtn" ng-if="gamepad().buttons[4].pressed" src="img/Xbox 360/360_LB.png">
+	<img class="xbtn" ng-if="gamepad().buttons[5].pressed" src="img/Xbox 360/360_RB.png">
+	<img class="xbtn" ng-if="gamepad().buttons[6].pressed" src="img/Xbox 360/360_LT.png">
+	<img class="xbtn" ng-if="gamepad().buttons[7].pressed" src="img/Xbox 360/360_RT.png">
+	<img class="xbtn" ng-if="gamepad().buttons[8].pressed" src="img/Xbox 360/360_Back.png">
+	<img class="xbtn" ng-if="gamepad().buttons[9].pressed" src="img/Xbox 360/360_Start.png">
+	<img class="xbtn" ng-if="gamepad().buttons[10].pressed" src="img/Xbox 360/360_Left_Stick.png">
+	<img class="xbtn" ng-if="gamepad().buttons[11].pressed" src="img/Xbox 360/360_Right_Stick.png">
+	<img class="xbtn" ng-if="gamepad().buttons[12].pressed" src="img/Xbox 360/360_Dpad_Up.png">
+	<img class="xbtn" ng-if="gamepad().buttons[13].pressed" src="img/Xbox 360/360_Dpad_Down.png">
+	<img class="xbtn" ng-if="gamepad().buttons[14].pressed" src="img/Xbox 360/360_Dpad_Left.png">
+	<img class="xbtn" ng-if="gamepad().buttons[15].pressed" src="img/Xbox 360/360_Dpad_Right.png">
+</div>
+
+<div class="well" ng-controller="ControllerInfo">
+	<canvas class="forcediagram" forcediagram ></canvas>
+</div>
+
+<div class="well" ng-controller="VectorTest">
+	<button class="btn btn-primary" ng-click="test()">Forceful Vector Test</button>
+</div>

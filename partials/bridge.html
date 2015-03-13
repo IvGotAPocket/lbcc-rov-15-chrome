@@ -1,0 +1,41 @@
+<div class="row" ng-controller="BridgeSelections">
+
+	<div class="col-sm-4">
+	<div class="form-group">
+		<label>Choose your gamepad.</label>
+		<select class="form-control"
+			ng-options="g.id for g in gamepads() track by g.index"
+			ng-model="gamepad"
+			ng-model-options="gamepadOptions" >
+		</select>
+	</div>
+	</div>
+
+	<div class="col-sm-4">
+	<div class="form-group">
+		<label>Choose your vehicle.</label>
+		<div class="input-group">
+			<span class="input-group-addon">
+				<i ng-if="netStatus()===1" class="fa fa-fw fa-close"></i>
+				<i ng-if="netStatus()===2" class="fa fa-fw fa-refresh fa-spin"></i>
+				<i ng-if="netStatus()===3" class="fa fa-fw fa-check"></i>
+			</span>
+			<select class="form-control"
+				ng-options="v.name for v in vehicles()"
+				ng-model="vehicle"
+				ng-model-options="vehicleOptions" >
+			</select>
+		</div>
+	</div>
+	</div>
+
+	<div class="col-sm-4">
+	<div class="form-group">
+		<label>Choose your role.</label>
+		<select class="form-control" >
+			<option>No Roles Yet</option>
+		</select>
+	</div>
+	</div>
+
+</div>

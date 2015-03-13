@@ -1,9 +1,9 @@
 html {
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 
-body.spaced {
-	padding-top: 30px;
+body {
+	padding-top: 50px;
 }
 
 canvas.stick {
@@ -21,4 +21,12 @@ canvas.forcediagram {
 img.xbtn {
 	vertical-align: top;
 	height: 36px;
+}
+
+.title-area {
+	-webkit-app-region: drag;
+}
+
+.title-area li a {
+	-webkit-app-region: no-drag;
 }
