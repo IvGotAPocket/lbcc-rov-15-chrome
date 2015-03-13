@@ -2,7 +2,6 @@ var app = angular.module('WaterBearApp.Controllers', []);
 
 
 app.controller('FramerateController', function (Framer, $scope) {
-	Framer.register(function () { $scope.$apply(); });
 	Framer.start();
 });
 

@@ -22,12 +22,14 @@ app.factory('Framer', ['$window', function ($window) {
 }]);
 
 
-app.factory('GamepadManager', ['$window', function ($window) {
+app.factory('GamepadManager', function ($window, Framer) {
 
 	var gamepad = KeyboardGamepad();
 
 	$window.addEventListener("gamepadconnected", onGamepadConnect, false);
 	$window.addEventListener("gamepaddisconnected", onGamepadDisconnect, false);
+
+	Framer.register(function () { navigator.getGamepads(); });
 
 	function getGamepads () {
 		var gp = [];
@@ -61,7 +63,7 @@ app.factory('GamepadManager', ['$window', function ($window) {
 		gamepad: getGamepad
 	};
 
-}]);
+});
 
 
 app.factory('MathManager', function ($window) {
@@ -351,11 +353,12 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 		navigator.getGamepads();
 		Fx = GamepadManager.gamepad().axes[0];
 		Fy = GamepadManager.gamepad().axes[1];
+		Fz = GamepadManager.gamepad().buttons[7].value - GamepadManager.gamepad().buttons[6].value;
 		Tz = GamepadManager.gamepad().axes[2];
 		return [
 			(Math.abs(Fx)<t) ? 0 : Fx*(2),
 			(Math.abs(Fy)<t) ? 0 : Fy*(2)*(-1),
-			0,
+			(Math.abs(Fz)<t) ? 0 : Fz*(2),
 			0,
 			0,
 			(Math.abs(Tz)<t) ? 0 : Tz*(2)*(-1)*(2),
