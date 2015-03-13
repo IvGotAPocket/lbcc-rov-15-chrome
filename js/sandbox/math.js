@@ -36,8 +36,11 @@ function computeVectors (params) {
 		var F = n.dot(T,I);
 		X = n.dot(F,Y);
 	} catch (e) {
+		console.error(Y);
+		console.error(M);
+		console.error(e);
 		return {
-			error	: e,
+			error	: e.message,
 			time	: Date.now() - start
 		};
 	}

@@ -1,0 +1,19 @@
+<div class="row" ng-controller="NetworkSettings">
+	<div class="col-sm-4">
+		<div class="checkbox">
+			<label><input
+				type="checkbox"
+				ng-model="scan"
+				ng-model-options="{ getterSetter: true }" >
+				Scan Network
+			</label>
+        </div>
+		<div class="form-group">
+			<label class="control-label">Broadcast Address</label>
+			<input class="form-control"
+				type="text"
+				ng-model="ip"
+				ng-model-options="{ getterSetter: true }" >
+		</div>
+	</div>
+</div>

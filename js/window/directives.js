@@ -112,7 +112,7 @@ app.directive("rearrightstick", function (Framer) {
 
 
 app.directive("forcediagram", function (Framer) {
-	
+
 	function arrow (ctx,p1,p2,size) {
     	ctx.save();
 
@@ -151,7 +151,7 @@ app.directive("forcediagram", function (Framer) {
 				if (!$scope.gamepad()) return;
 				element[0].width = element[0].width;
 				var ctx = element[0].getContext('2d');
-				
+
 				ctx.beginPath();
 				ctx.rect(w/4,h/4,w/2,h/2);
 				ctx.stroke();
@@ -179,7 +179,7 @@ app.directive("forcediagram", function (Framer) {
 
 
 				ctx.save();
-				
+
 				var s = 2*Math.PI*$scope.gamepad().axes[2];
 				var n = -Math.PI/2;
 				var r = 24;
