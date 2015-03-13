@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html ng-app="WaterBearApp">
+	<head>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/window.css">
+		<script type="text/javascript" src="lib/angular.min.js"></script>
+		<script type="text/javascript" src="lib/moment.min.js"></script>
+		<script type="text/javascript" src="lib/raf-shim.js"></script>
+		<script type="text/javascript" src="lib/encoding-indexes.js"></script>
+		<script type="text/javascript" src="lib/encoding.js"></script>
+		<script type="text/javascript" src="js/input/keyboard_gamepad.js"></script>
+		<script type="text/javascript" src="js/app/controllers.js"></script>
+		<script type="text/javascript" src="js/app/directives.js"></script>
+		<script type="text/javascript" src="js/app/services.js"></script>
+		<script type="text/javascript" src="js/app/app.js"></script>
+	</head>
+	<body class="spaced">
+		<div class="container">
+
+			<div class="well" ng-controller="Bridge">
+				<div class="form-group">
+					<label>Connect and choose your gamepad.</label>
+					<select class="form-control"
+						ng-options="g.id for g in gamepads() track by g.index"
+						ng-model="gamepad"
+						ng-model-options="gamepadOptions" >
+					</select>
+				</div>
+				<div class="form-group">
+					<label>Connect and choose your vehicle.</label>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<i class="fa fa-fw fa-close"></i>
+						</span>
+						<select class="form-control"
+							ng-options="v.ip for v in vehicles() track by v.ip"
+							ng-model="vehicle"
+							ng-model-options="{}" >
+						</select>
+					</div>
+				</div>
+			</div>
+
+			<div class="well" ng-controller="NetworkTest">
+				<button class="btn btn-default" ng-click="ping()">Ping</button>
+			</div>
+
+			<div class="well" ng-controller="ControllerInfo">
+				<canvas class="stick" leftStick></canvas>
+				<canvas class="stick" rightStick></canvas>
+				<canvas class="stick" rearleftstick></canvas>
+				<canvas class="stick" rearrightstick></canvas>
+<img class="xbtn" ng-if="gamepad().buttons[0].pressed" src="img/Xbox 360/360_A.png">
+<img class="xbtn" ng-if="gamepad().buttons[1].pressed" src="img/Xbox 360/360_B.png">
+<img class="xbtn" ng-if="gamepad().buttons[2].pressed" src="img/Xbox 360/360_X.png">
+<img class="xbtn" ng-if="gamepad().buttons[3].pressed" src="img/Xbox 360/360_Y.png">
+<img class="xbtn" ng-if="gamepad().buttons[4].pressed" src="img/Xbox 360/360_LB.png">
+<img class="xbtn" ng-if="gamepad().buttons[5].pressed" src="img/Xbox 360/360_RB.png">
+<img class="xbtn" ng-if="gamepad().buttons[6].pressed" src="img/Xbox 360/360_LT.png">
+<img class="xbtn" ng-if="gamepad().buttons[7].pressed" src="img/Xbox 360/360_RT.png">
+<img class="xbtn" ng-if="gamepad().buttons[8].pressed" src="img/Xbox 360/360_Back.png">
+<img class="xbtn" ng-if="gamepad().buttons[9].pressed" src="img/Xbox 360/360_Start.png">
+<img class="xbtn" ng-if="gamepad().buttons[10].pressed" src="img/Xbox 360/360_Left_Stick.png">
+<img class="xbtn" ng-if="gamepad().buttons[11].pressed" src="img/Xbox 360/360_Right_Stick.png">
+<img class="xbtn" ng-if="gamepad().buttons[12].pressed" src="img/Xbox 360/360_Dpad_Up.png">
+<img class="xbtn" ng-if="gamepad().buttons[13].pressed" src="img/Xbox 360/360_Dpad_Down.png">
+<img class="xbtn" ng-if="gamepad().buttons[14].pressed" src="img/Xbox 360/360_Dpad_Left.png">
+<img class="xbtn" ng-if="gamepad().buttons[15].pressed" src="img/Xbox 360/360_Dpad_Right.png">
+			</div>
+
+			<div class="well" ng-controller="ControllerInfo">
+				<canvas class="forcediagram" forcediagram></canvas>
+			</div>
+
+			<div class="well" ng-controller="MathInfo">
+				<button class="btn btn-default" ng-click="send()">Send Check</button>
+				<p>math.js was last communicated with {{ago()}}.</p>
+			</div>
+
+			<iframe class="well" style="width:100%;" src="sandbox.html" vectormath></iframe>
+
+			<!--
+
+			<div class="well">
+				<p>Networking status will be in here.</p>
+				<input class="form-control" type="text" ng-model="broadcastAddress"><br>
+				<input class="form-control" type="number" ng-model="broadcastPort"><br>
+				<button class="btn btn-default" ng-click="sendPacket()">Send Packet</button>
+				<select ng-options="v.ip for v in vehicles" ng-model="vehicle"></select>
+				<p>Last Comm {{lastComm()}}</p>
+			</div>
+
+			<div class="well">
+				<label>
+					<input type="checkbox" ng-model="allowComputeVectors">
+					<span>Allow Compute Vectors</span>
+				</label>
+				<p>Compute time: {{vectorTime}}ms</p>
+				<p>Press <img width="16" src="img/Xbox 360/360_B.png"> to emergency stop.</p>
+				<p>Press <img width="16" src="img/Xbox 360/360_X.png"> to enable vectors.</p>
+				<table class="table">
+					<tr ng-repeat="v in vectors">
+						<th>{{v.motor}}</th>
+						<td class="col-xs-6"><div class="progress">
+							<div class="progress-bar progress-bar-success"
+								ng-style="{width:v.strength*100+'%'}"></div>
+							<div class="progress-bar progress-bar-danger"
+								ng-style="{width:v.strength*-100+'%'}"></div>
+						</div></div></td>
+					</tr>
+				</table>
+			</div>
+
+			
+
+			-->
+
+		</div>
+	</body>
+</html>

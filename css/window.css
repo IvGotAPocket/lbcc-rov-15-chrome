@@ -1,0 +1,24 @@
+html {
+	overflow-y: scroll;
+}
+
+body.spaced {
+	padding-top: 30px;
+}
+
+canvas.stick {
+	background: #EEEEEE;
+	height: 36px;
+	width: 36px;
+}
+
+canvas.forcediagram {
+	background: #EEEEEE;
+	height: 64px;
+	width: 64px;
+}
+
+img.xbtn {
+	vertical-align: top;
+	height: 36px;
+}

@@ -1,0 +1,28 @@
+{
+	"name": "WaterBear",
+	"description": "Control the WaterBear ROV.",
+	"version": "0.1",
+	"manifest_version": 2,
+	"permissions": [],
+	"sockets": {
+		"udp": {
+			"send": ["*"],
+			"bind": ["*"],
+			"multicastMembership": []
+		}
+	},
+	"permissions": [
+		"system.network"
+	],
+	"icons": {
+		"128": "img/128.png"
+	},
+	"app": {
+		"background": {
+			"scripts": ["js/background.js"]
+		}
+	},
+	"sandbox": {
+		"pages": ["sandbox.html"]
+	}
+}
