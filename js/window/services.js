@@ -246,7 +246,11 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 
 	var vectorFrequency		= 10;	// Perform vector math 10 times a second
 	var poolingFrequency	= 10;	// Accumulate changes before sending a batch
-	var scanFrequency		= 0.2;	// How many times a second to broadcast ping
+	var scanFrequency		= 0.6;	// How many times a second to broadcast ping
+	var lostFrequency		= 0.5;	// How many times a second to expect feedback
+
+	var lastPing			= -1;
+	var lastPooling			= -1;
 
 	var socketId;
 
@@ -277,9 +281,29 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 		Local Functions - Vehicle Comms
 	------------------------------------------------------------------------ */
 
+	Framer.register(onFrame);
+
+	function onFrame () {
+		var now = Date.now();
+		if (scanning) {
+			if ((now - lastPing) >= 1000 / scanFrequency) {
+				lastPing = now;
+				sendPingCommand();
+			}
+		}
+	}
+
+	function sendPingCommand () {
+		console.log('Pinging network...');
+		sendPacket({
+			cmd	: "ping",
+			ctl	: false
+		}, _broadcastAddress, _broadcastPort);
+	}
+
 	function getVehicleByIp (ip) {
 		for (var i = 0; i < vehicles.length; i++) {
-			if (vehicles[i].ip == ip) { return vehicles[i]; }
+			if (vehicles[i].comms.ip == ip) { return vehicles[i]; }
 		}
 		return null;
 	}
@@ -288,11 +312,24 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 		return angular.isDefined(ip) ? (_broadcastAddress = ip) : _broadcastAddress;
 	}
 
-
-
+	// Returns true if the vehicle is chosen and communicating
 	function isConnected () {
-		return false;
+		return (!!vehicle) && (Date.now() - vehicle.comms.lastComm < 1000 / lostFrequency);
 	}
+
+	// Returns true if the vehicle is chosen and is lost.
+	function isLost () {
+		return (!!vehicle) && (Date.now() - vehicle.comms.lastComm >= 1000 / lostFrequency);
+	}
+
+
+
+
+
+
+
+
+
 
 	function onReceive (info) {
 		if (info.socketId !== socketId) { return; }
@@ -300,6 +337,9 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 		switch (json.cmd) {
 			case 'pong':
 				onPong(info, json);
+				break;
+			case 'is':
+				onIs(info, json);
 				break;
 			default:
 				console.error(info);
@@ -319,18 +359,57 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 			rov.controlling		= json.ctl;
 			rov.channelCount	= json.chn;
 			vehicles.push(rov);
+			if (!vehicle) vehicle = rov;
 		}
 	}
 
-	function sendPacket () {
-		var obj = {
-			cmd	: "ping",
-			ctl	: false
-		};
-		var buf = Encoder.encode(JSON.stringify(obj)).buffer;
-		chrome.sockets.udp.send(socketId, buf, _broadcastAddress, _broadcastPort, function (sendInfo) {
-			console.log("sent " + sendInfo.bytesSent);
+	function onIs (info, json) {
+		var rov = getVehicleByIp(info.remoteAddress);
+		if (!rov) { return console.error('is command from unknown'); }
+		rov.comms.lastComm = Date.now();
+		for (var i = 0; i < json.list.length; i++) {
+			var c = json.list[i].c;
+			var v = json.list[i].v;
+			var k = false;
+			for (var j = 0; j < rov.thrusters.length; j++) {
+				if (rov.thrusters[j].channel === c) {
+					rov.thrusters[j].n.current = v;
+					rov.thrusters[j].n.updated = rov.thrusters[j].n.updated || v;
+					rov.thrusters[j].n.lastRead = Date.now();
+					k = true;
+					console.log('Read thruster channel ' + c + ' as ' + v);
+					break;
+				}
+			}
+			for (var j2 = 0; j2 < rov.servos.length; j2++) {
+				if (rov.servos[j2].channel === c) {
+					rov.servos[j2].n.current = v;
+					rov.servos[j2].n.lastRead = Date.now();
+					k = true;
+					console.log('Read servo channel ' + c + ' as ' + v);
+					break;
+				}
+			}
+			if (!k) console.error('Unknown channel ' + c + ' and value ' + v);
+		}
+	}
+
+	function sendPacket (data, ip, port) {
+		var buf = Encoder.encode(JSON.stringify(data)).buffer;
+		chrome.sockets.udp.send(socketId, buf, ip, port, function (sendInfo) {
+			console.log("Sent " + sendInfo.bytesSent + " bytes.");
 		});
+	}
+
+	function sendThrusters (v) {
+		if (!vehicle) throw new Error('scream');
+		sendPacket({
+			'cmd'	: "set",
+			'list'	: [{
+				'c'	: 1,
+				'v'	: v,
+			}]
+		}, vehicle.comms.ip, vehicle.comms.port);
 	}
 
 	/* ------------------------------------------------------------------------
@@ -380,12 +459,11 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 		getVehicles	: function ( ) { return vehicles; },
 		allowScan	: function (b) { return angular.isDefined(b) ? (scanning = b) : scanning; },
 		vehicle		: function (v) { return angular.isDefined(v) ? (vehicle = v) : vehicle; },
-		isConnected	: function ( ) { return isConnected(); },
+		isConnected	: isConnected,
+		isLost		: isLost,
 		broadcastIP	: broadcastAddress,
-		vectorTest	: function ( ) {
-			vehicle = WaterBearVehicle;
-			computeVectors();
-		}
+		sendThrusters: sendThrusters,
+		sendGet		: function () { sendPacket({"cmd":"get"}, vehicle.comms.ip, vehicle.comms.port); }
 	};
 
 });

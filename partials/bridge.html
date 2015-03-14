@@ -5,8 +5,7 @@
 		<label>Choose your gamepad.</label>
 		<select class="form-control"
 			ng-options="g.id for g in gamepads() track by g.index"
-			ng-model="gamepad"
-			ng-model-options="gamepadOptions" >
+			ng-model="gamepad" ng-model-options="gamepadOptions" >
 		</select>
 	</div>
 	</div>
@@ -22,8 +21,7 @@
 			</span>
 			<select class="form-control"
 				ng-options="v.name for v in vehicles()"
-				ng-model="vehicle"
-				ng-model-options="vehicleOptions" >
+				ng-model="vehicle" ng-model-options="vehicleOptions" >
 			</select>
 		</div>
 	</div>

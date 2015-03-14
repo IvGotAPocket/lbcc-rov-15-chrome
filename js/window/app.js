@@ -20,6 +20,11 @@ app.config(['$routeProvider', function ($routeProvider) {
 		controller	: ''
 	}).
 
+	when('/vehicle', {
+		templateUrl	: 'partials/vehicle.html',
+		controller	: ''
+	}).
+
 	when('/debug', {
 		templateUrl	: 'partials/debug.html',
 		controller	: ''
@@ -41,6 +46,10 @@ app.factory('NavRoutes', function ($window) {
 		{
 			text: 'Network',
 			page: '/network'
+		},
+		{
+			text: 'Vehicle',
+			page: '/vehicle'
 		},
 		{
 			text: 'Debug',

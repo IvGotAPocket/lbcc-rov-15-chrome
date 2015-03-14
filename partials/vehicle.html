@@ -1,0 +1,34 @@
+<div ng-controller="VehicleInfo">
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Thruster</th>
+				<th>Min</th>
+				<th>Max</th>
+				<th>Manual</th>
+				<th>Slider</th>
+				<th>Current</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="t in thrusters">
+				<td>{{t.name}}</td>
+				<td>{{t.n.minimum}}</td>
+				<td>{{t.n.maximum}}</td>
+				<td><input type="range"
+					min="{{t.n.minimum}}"
+					max="{{t.n.maximum}}"
+					ng-model="thrusterSnap(t)"
+					ng-model-options="{ getterSetter: true }" />
+				</td>
+				<td><input type="number"
+					ng-model="thruster(t)"
+					ng-model-options="{ getterSetter: true }" />
+				</td>
+				<td>{{t.n.current}} us</td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>
