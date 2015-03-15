@@ -47,11 +47,17 @@
 		<nav class="navbar navbar-default navbar-fixed-bottom title-area" ng-controller="StatusBar">
 			<div class="container">
 				<div class="navbar-header">
-					<a class="navbar-brand">Abort Panel</a>
+					<a class="navbar-brand">Status</a>
 				</div>
 				<ul class="nav navbar-nav">
-					<li><a ng-click="gamepad(null)">{{gamepad().id || 'No Gamepad'}}</a></li>
-					<li><a ng-click="">{{rovStatus()}}</a></li>
+					<li><a>{{gamepad().id || 'No Gamepad'}}</a></li>
+					<li><a>{{rovStatus()}}</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a>
+						<i class="fa fa-square" ng-class="{'text-danger':isSend()}"></i>
+						<i class="fa fa-square" ng-class="{'text-success':isRead()}"></i>
+					</a></li>
 				</ul>
 			</div>
 			<iframe style="display:none;" src="sandbox.html" vectormath ></iframe>

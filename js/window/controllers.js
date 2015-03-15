@@ -25,6 +25,9 @@ app.controller('StatusBar', function ($scope, GamepadManager, MathManager, Vehic
 		if (VehicleManager.allowScan()) return 'Searching';
 		return 'Off';
 	};
+
+	$scope.isSend = VehicleManager.isSend;
+	$scope.isRead = VehicleManager.isRead;
 });
 
 
@@ -47,8 +50,12 @@ app.controller('BridgeSelections', function ($scope, GamepadManager, VehicleMana
 
 
 app.controller('NetworkSettings', function ($scope, VehicleManager) {
-	$scope.ip = VehicleManager.broadcastIP;
-	$scope.scan = VehicleManager.allowScan;
+	$scope.ip			= VehicleManager.broadcastIP;
+	$scope.scan			= VehicleManager.allowScan;
+	$scope.poolEnabled	= VehicleManager.poolEnabled;
+	$scope.poolFreq		= VehicleManager.poolFreq;
+	$scope.getEnabled	= VehicleManager.getEnabled;
+	$scope.getFreq		= VehicleManager.getFreq;
 });
 
 
@@ -60,11 +67,7 @@ app.controller('ControllerInfo', function ($scope, GamepadManager) {
 app.controller('VehicleInfo', function ($scope, VehicleManager) {
 
 	var d = 1;
-
-	setTimeout(function () {
-		d = 0;
-		$scope.$apply();
-	}, 1);
+	setTimeout(function () { d = 0; $scope.$apply(); }, 1);
 
 	$scope.thrusters = VehicleManager.vehicle().thrusters;
 
@@ -72,7 +75,8 @@ app.controller('VehicleInfo', function ($scope, VehicleManager) {
 		return function (v) {
 			if (angular.isDefined(v)) {
 				v = parseInt(v);
-				if (Math.abs(v-1000) < 50) return (t.n.updated = 1000);
+				var mid = (t.n.minimum + t.n.maximum)/2;
+				if (Math.abs(v-mid) < 50) return (t.n.updated = mid);
 				return (t.n.updated = v);
 			} else {
 				return t.n.updated + d;
@@ -86,16 +90,4 @@ app.controller('VehicleInfo', function ($scope, VehicleManager) {
 		};
 	};
 
-});
-
-
-app.controller('VectorTest', function ($scope, VehicleManager) {
-	$scope.ping = VehicleManager.sendPing;
-	$scope.value = 1000;
-	$scope.send = function () {
-		VehicleManager.sendThrusters($scope.value);
-	};
-	$scope.read = function () {
-		VehicleManager.sendGet();
-	};
 });
