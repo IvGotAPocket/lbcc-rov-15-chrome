@@ -155,7 +155,7 @@ app.factory('WaterBearVehicle', function () {
 
 	var rov = {
 		name			: 'WaterBear',
-		version			: '2.0',
+		version			: '2.1',
 		comms: {
 			ip				: '',
 			port			: 0,
@@ -170,13 +170,13 @@ app.factory('WaterBearVehicle', function () {
 	};
 
 	createThruster(rov, 1, 1000, 2000, 1,-1, 0, 1, 1, 0, 'bottomRight');
-	createThruster(rov, 1, 1000, 2000,-1,-1, 0,-1, 1, 0, 'bottomLeft');
-	createThruster(rov, 1, 1000, 2000,-1, 1, 0,-1,-1, 0, 'topLeft');
-	createThruster(rov, 1, 1000, 2000, 1, 1, 0, 1,-1, 0, 'topRight');
-	createThruster(rov, 1, 1000, 2000, 1,-1, 0, 0, 0, 1, 'bottomRightVert');
-	createThruster(rov, 1, 1000, 2000,-1,-1, 0, 0, 0, 1, 'bottomLeftVert');
-	createThruster(rov, 1, 1000, 2000,-1, 1, 0, 0, 0, 1, 'topLeftVert');
-	createThruster(rov, 1, 1000, 2000, 1, 1, 0, 0, 0, 1, 'topRightVert');
+	createThruster(rov, 2, 1000, 2000,-1,-1, 0,-1, 1, 0, 'bottomLeft');
+	createThruster(rov, 3, 1000, 2000,-1, 1, 0,-1,-1, 0, 'topLeft');
+	createThruster(rov, 4, 1000, 2000, 1, 1, 0, 1,-1, 0, 'topRight');
+	createThruster(rov, 5, 1000, 2000, 1,-1, 0, 0, 0, 1, 'bottomRightVert');
+	createThruster(rov, 6, 1000, 2000,-1,-1, 0, 0, 0, 1, 'bottomLeftVert');
+	createThruster(rov, 7, 1000, 2000,-1, 1, 0, 0, 0, 1, 'topLeftVert');
+	createThruster(rov, 8, 1000, 2000, 1, 1, 0, 0, 0, 1, 'topRightVert');
 
 	computeThrustMatrix(rov);
 

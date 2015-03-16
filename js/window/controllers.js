@@ -2,8 +2,20 @@ var app = angular.module('WaterBearApp.Controllers', []);
 
 
 app.controller('FramerateController', function ($scope, Framer) {
-	Framer.register(function () { $scope.$apply(); });
+
+	var scopeLast = -1;
+	var scopeFramerate = 30;
+
+	Framer.register(function () {
+		var now = Date.now();
+		if (now-scopeLast > 1000/scopeFramerate) {
+			scopeLast = now;
+			$scope.$apply();
+		}
+	});
+
 	Framer.start();
+
 });
 
 
