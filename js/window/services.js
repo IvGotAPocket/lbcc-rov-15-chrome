@@ -188,10 +188,10 @@ app.factory('WaterBearVehicle', function () {
 			'n'		: {
 				minimum		: min,
 				maximum		: max,
+				trim_low	: 0,
+				trim_high	: 0,
 				current		: 0,
-				updated		: 0,
-				lastSent	: -1,
-				lastRead	: -1
+				updated		: 0
 			},
 			pos		: { x:px, y:py, z:pz },
 			force	: { x:fx, y:fy, z:fz },
@@ -208,9 +208,7 @@ app.factory('WaterBearVehicle', function () {
 				minimum		: min,
 				maximum		: max,
 				current		: 0,
-				updated		: 0,
-				lastSent	: -1,
-				lastRead	: -1
+				updated		: 0
 			}
 		});
 	}
@@ -269,16 +267,15 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 	var poolingFrequency	= 10;		// Hz
 	var lastPooling			= -1;		// ms
 
-	// Find "current" values that are old and make GET requests.
+	// Update local values every so often regardless.
 	var getting				= false;	// on/off
 	var gettingFrequency	= 10;		// Hz
 	var gettingLastTime		= -1;		// ms
-	var gettingMaxAge		= 500;		// ms
 
 	var audioEnabled		= true;
-	var audio_found			= new Audio('media/171670__fins__success-2.wav');
-	var audio_unlost		= new Audio('media/171671__fins__success-1.wav');
-	var audio_lost			= new Audio('media/204369__philitup321__alert-sound.ogg');
+	var audio_found			= new Audio('media/110931__chrisw92__error2.wav');
+	var audio_unlost		= new Audio('media/136755__ultranova105__positive-warning.wav');
+	var audio_lost			= new Audio('media/136756__ultranova105__negative-warning.wav');
 
 	var globalLastSend		= -1;
 	var globalLastRead		= -1;
@@ -361,16 +358,11 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 				gettingLastTime = now;
 				for (i = 0; i < vehicles.length; i++) {
 					rov = vehicles[i];
-					var old = hasOldCurrentValues(rov, gettingMaxAge);
-					if (old) {
-						if (debugging) console.log('Sending an GET due to old values.');
-						sendPacket({"cmd":"get"}, rov.comms.ip, rov.comms.port);
-					}
+					if (debugging) console.log('Sending an GET due to old values.');
+					sendPacket({"cmd":"get"}, rov.comms.ip, rov.comms.port);
 				}
 			}
 		}
-
-		//console.log('Vehicle frame took: ' + (Date.now() - now));
 	}
 
 	/* ------------------------------------------------------------------------
@@ -395,12 +387,11 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 	}
 
 	function buildUpdate (rov) {
-		var list = [], now = Date.now(), i;
+		var list = [], i;
 		// First do thrusters
 		for (i = 0; i < rov.thrusters.length; i++) {
 			var thruster = rov.thrusters[i];
 			if (thruster.n.updated !== thruster.n.current) {
-				thruster.n.lastSent = now;
 				list.push({
 					'c': thruster.channel,
 					'v': thruster.n.updated
@@ -411,7 +402,6 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 		for (i = 0; i < rov.servos.length; i++) {
 			servos = rov.servos[i];
 			if (servos.n.updated !== servos.n.current) {
-				servos.n.lastSent = now;
 				list.push({
 					'c': servos.channel,
 					'v': servos.n.updated
@@ -419,23 +409,6 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 			}
 		}
 		return list;
-	}
-
-	function hasOldCurrentValues (rov, timeout) {
-		var now = Date.now(), i, age;
-		// First do thrusters
-		for (i = 0; i < rov.thrusters.length; i++) {
-			var thruster = rov.thrusters[i];
-			age = now - thruster.n.lastRead;
-			if (age > timeout) { return true; }
-		}
-		// then servos
-		for (i = 0; i < rov.servos.length; i++) {
-			var servos = rov.servos[i];
-			age = now - servos.n.lastRead;
-			if (age > timeout) { return true; }
-		}
-		return false;
 	}
 
 	/* ------------------------------------------------------------------------
@@ -473,6 +446,7 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 		} else {
 			var rov = WaterBearVehicle;
 			if (rov.version != json.vrs) throw Error('version mismatch');
+			rov.name			= json.name || rov.name;
 			rov.comms.ip		= info.remoteAddress;
 			rov.comms.port		= info.remotePort;
 			rov.comms.lastComm	= Date.now();
@@ -518,8 +492,7 @@ app.factory('VehicleManager', function (Framer, GamepadManager, MathManager, Wat
 	function sendPacket (data, ip, port) {
 		var buf = Encoder.encode(JSON.stringify(data)).buffer;
 		chrome.sockets.udp.send(socketId, buf, ip, port, function (sendInfo) {
-			if (debugging) console.log("Sent " + sendInfo.bytesSent + " bytes.");
-			globalLastSend = Date.now();
+			if (sendInfo.bytesSent) { globalLastSend = Date.now(); }
 		});
 	}
 
